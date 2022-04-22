@@ -2,7 +2,8 @@ import { Schema, model, Document } from "mongoose";
 
 interface IList extends Document {
     name: String,
-    description: String
+    description: String;
+    user_id: String;
 };
 
 const listSchema = new Schema<IList>({
@@ -14,6 +15,10 @@ const listSchema = new Schema<IList>({
     description: {
         type: String,
         trim: true
+    },
+    user_id: {
+        type: Schema.Types.ObjectId,
+        required: true
     }
 });
 
