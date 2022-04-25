@@ -1,7 +1,12 @@
 import { Router, Request, Response } from "express";
 import ListController from "../controllers/listController";
+import AuthService from '../middleware/auth';
+
+const auth = new AuthService();
 
 const listRoutes = Router();
+
+listRoutes.use(auth.authorize);
 
 const listController = new ListController();
 

@@ -1,7 +1,12 @@
 import { Router, Request, Response } from "express";
 import TaskController from "../controllers/taskController";
+import AuthService from '../middleware/auth';
+
+const auth = new AuthService();
 
 const taskRoutes = Router();
+
+taskRoutes.use(auth.authorize);
 
 const taskController = new TaskController();
 

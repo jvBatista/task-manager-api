@@ -33,10 +33,7 @@ export default class ListController {
 
     getAllLists = async (req: Request, res: Response) => {
         try {
-            const token = req.headers.authorization?.split(' ')[1];
-            const user = JSON.parse(await auth.decodeToken(token as string));
-
-            const data = await List.find({ user_id: user.id });
+            const data = await List.find({ user_id: req.userId });
             // const data = await List.find();
 
             if (!data.length) return res.status(404).send({ error: "Nenhuma lista foi encontrada" });
@@ -51,8 +48,6 @@ export default class ListController {
     getOneList = async (req: Request, res: Response) => {
         try {
             const { id } = req.params;
-            const token = req.headers.authorization?.split(' ')[1];
-            const user = JSON.parse(await auth.decodeToken(token as string));
 
             if (!Types.ObjectId.isValid(id)) return res.status(400).json({
                 message: 'Falha ao encontrar a lista, id informado inválido',
@@ -62,7 +57,7 @@ export default class ListController {
 
             if (!list) return res.status(404).send({ error: "Lista não encontrada" });
 
-            if (String(list.user_id) !== user.id) return res.status(401).send({ error: "Não autorizado" });
+            if (String(list.user_id) !== req.userId) return res.status(401).send({ error: "Não autorizado" });
 
             const tasks = await Task.find({ list_id: id });
 

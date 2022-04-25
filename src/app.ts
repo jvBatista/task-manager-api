@@ -1,10 +1,17 @@
 import express from "express";
-// import 'dotenv/config';
 import bodyParser from "body-parser";
 import databaseConnect from './database/db';
 import router from "./router";
 
 require('dotenv').config();
+
+declare global {
+    namespace Express {
+        interface Request {
+            userId?: String,
+        }
+    }
+}
 
 const app = express();
 

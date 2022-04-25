@@ -48,8 +48,7 @@ export default class UserController {
 
             const token = auth.generateToken({
                 id: user.id,
-                email: user.email,
-                password: user.password,
+                email: user.email
             });
 
             return res.status(200).json({
@@ -78,8 +77,6 @@ export default class UserController {
     getUser = async (req: Request, res: Response) => {
         try {
             const { id } = req.params;
-            const token = req.headers.authorization?.split(' ')[1];
-            const data = JSON.parse(await auth.decodeToken(token as string));
 
             if (!Types.ObjectId.isValid(id)) return res.status(400).json({
                 message: 'Falha ao encontrar usuário, id informado inválido',
@@ -89,7 +86,7 @@ export default class UserController {
 
             if (!user) return res.status(404).send({ error: "Usuário não encontrado" });
 
-            if (String(user?._id) !== data.id) return res.status(401).json({ message: 'Não autorizado' });
+            if (String(user?._id) !== req.userId) return res.status(401).json({ message: 'Não autorizado' });
 
             res.status(200).json(user);
         } catch (error) {
